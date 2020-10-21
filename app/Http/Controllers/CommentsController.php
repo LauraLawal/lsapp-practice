@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Post;
 use App\Models\comments;
 
 class CommentsController extends Controller
 {
-    // Post $post
-    public function store(Request $request){
-        $post = new Post;
+  
+    public function store(Post $post){
+       
         comments::create([
-            'body' => request('body'),
-            'id' => $post->id
+        'body' => request('body'),
+            'post_id' => $post->id
         ]);
-        return back();
+
+
+        return redirect('/posts')->with('success','Comment added');
     }
 }

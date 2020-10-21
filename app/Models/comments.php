@@ -14,8 +14,10 @@ class comments extends Model
     //timestamps
     public $timestamps= true;
     use HasFactory;
-    protected $fillable = ['body', 'id'];
+    protected $fillable = ['body','post_id'];
+
     public function post(){
-        return $this->belongsTo('App\Models\Post');
+
+        return $this->belongsTo(Post::class);
 }
 }

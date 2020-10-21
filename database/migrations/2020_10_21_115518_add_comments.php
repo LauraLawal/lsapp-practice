@@ -14,8 +14,9 @@ class AddComments extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->id();
-            $table->mediumText('body');
+            $table->increments('id');
+            $table->integer('post_id');
+            $table->string('body');
             $table->timestamps();
         });
     }
