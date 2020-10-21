@@ -22,11 +22,12 @@
         @endif
     @endif
     <hr>
-    
+
         <div class = "card">
             <div class = "card-black">
              
-                <form method = "POST" action="/posts/{{$post->id}}/comment">
+            <form method = "POST" action="/posts/{{$post->id}}/comments">
+                    {{csrf_field()}}
                     <div class = "form-group">
                         <textarea name = "body" placeholder="Leave a comment.." class = "form-control"></textarea>
                             </div>
@@ -36,5 +37,5 @@
                 </form>
             
             </div>
-        
+        </small>
 @endsection
