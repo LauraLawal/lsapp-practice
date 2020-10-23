@@ -17,13 +17,14 @@ Route::get('/users/{id}', function ($id) {
 
 */
 
-Route::get('/','PagesController@index');
-Route::get('/about','PagesController@about');
-Route::get('/services','PagesController@services');
+Route::get('/', 'PagesController@index');
+Route::get('/about', 'PagesController@about');
+Route::get('/services', 'PagesController@services');
 
 Route::resource('/posts', 'PostsController');
 
 Auth::routes();
 
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('Dashboard');
-Route::post('/posts/{post}/comments', 'CommentsController@store');
+Route::post('/posts/{post}/comments', 'CommentController@store');
+Route::resource('/test', 'TestController');

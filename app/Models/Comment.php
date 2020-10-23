@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class comments extends Model
+class Comment extends Model
 {
     // Table name
     protected $table = 'comments';
@@ -16,8 +16,8 @@ class comments extends Model
     use HasFactory;
     protected $fillable = ['body','post_id'];
 
-    public function post(){
-
+    public function post()
+    {
         return $this->belongsTo(Post::class);
-}
+    }
 }
