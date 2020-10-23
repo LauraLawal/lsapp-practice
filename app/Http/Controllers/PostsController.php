@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\post;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\post;
+
 //use DB;
 class PostsController extends Controller
 {
@@ -25,12 +27,12 @@ class PostsController extends Controller
      */
     public function index()
     {
-         //to use sql : $posts = DB::select('SELECT*FROM posts');
-         //$posts = Post::all();
+        //to use sql : $posts = DB::select('SELECT*FROM posts');
+        //$posts = Post::all();
         //$posts =  Post::orderBy('title','desc')->get();
 
-        $posts =  Post::orderBy('created_at','desc')->paginate(10);
-        return view ('posts.index')->with('posts', $posts);
+        $posts =  Post::orderBy('created_at', 'desc')->paginate(10);
+        return view('posts.index')->with('posts', $posts);
     }
 
     /**
@@ -51,30 +53,29 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
             'cover_image' => 'image|nullable|max:1999',
         
             ]);
-            //handle file upload
-        if($request->hasFile('cover_image')){
-           //get file name with the extension
-           $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+        //handle file upload
+        if ($request->hasFile('cover_image')) {
+            //get file name with the extension
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
 
-           //get just file
-                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            //get just file
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
 
-           //get just extension
+            //get just extension
             $extension = $request->file('cover_image')->extension();
 
             // Filename to store
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
             //upload image
-            $path = $request->file('cover_image')->storeAs('public/cover_images/',$fileNameToStore);
-                }
-        else{
+            $path = $request->file('cover_image')->storeAs('public/cover_images/', $fileNameToStore);
+        } else {
             $fileNameToStore = 'noimage.jpg';
         }
         //create post
@@ -86,8 +87,7 @@ class PostsController extends Controller
 
         $post->save();
 
-        return redirect('/posts')->with('success','Post Created');
-    
+        return redirect('/posts')->with('success', 'Post Created');
     }
 
     /**
@@ -99,11 +99,14 @@ class PostsController extends Controller
 
     public function show($id)
     {
-       
+        /** */
+        $comment = Comment::find(1);
+        $post = $comment->post;
+        dd($post);
         $post = Post::find($id);
         
-        return view('posts.show')->with('post', $post);
         dd($post->comments);
+        return view('posts.show')->with('post', $post);
     }
 
     /**
@@ -116,8 +119,7 @@ class PostsController extends Controller
     {
         $post = Post::find($id);
         //check for correct user
-        if(auth()->user()->id !== $post->user_id){
-
+        if (auth()->user()->id !== $post->user_id) {
             return redirect('/posts')->with('error', 'Unauthorized Page');
         }
 
@@ -134,44 +136,42 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
             'cover_image' => 'image|nullable|max:1999'
             ]);
-                       //handle file upload
-        if($request->hasFile('cover_image')){
+        //handle file upload
+        if ($request->hasFile('cover_image')) {
             //get file name with the extension
             $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
  
             //get just file
-                 $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
  
             //get just extension
-             $extension = $request->file('cover_image')->extension();
+            $extension = $request->file('cover_image')->extension();
  
-             // Filename to store
-             $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            // Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
  
-             //upload image
-             $path = $request->file('cover_image')->storeAs('public/cover_images/',$fileNameToStore);
-                 }
-         else{
-             $fileNameToStore = 'noimage.jpg';
-         }
+            //upload image
+            $path = $request->file('cover_image')->storeAs('public/cover_images/', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.jpg';
+        }
         
         //find post
         $post = Post::find($id);
         $post->title = $request->input('title');
         $post->body = $request->input('body');
-        if($request->hasFile('cover_image')&&$post->cover_image != 'noimage.jpg'){
+        if ($request->hasFile('cover_image')&&$post->cover_image != 'noimage.jpg') {
             Storage::delete('public/cover_images/'.$post->cover_image);
         }
         $post->cover_image = $fileNameToStore;
         $post->save();
 
-        return redirect('/posts')->with('success','Post Updated');
-    
+        return redirect('/posts')->with('success', 'Post Updated');
     }
 
     /**
@@ -185,12 +185,10 @@ class PostsController extends Controller
         $post = Post::find($id);
     
         //check for correct user
-        if(auth()->user()->id !== $post->user_id){
-
+        if (auth()->user()->id !== $post->user_id) {
             return redirect('/posts')->with('error', 'Unauthorized Page');
         }
         $post->delete();
-        return redirect('/posts')->with('success','Post Removed');
-    
+        return redirect('/posts')->with('success', 'Post Removed');
     }
 }
