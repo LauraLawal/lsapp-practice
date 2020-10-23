@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
     @section('content')
 <a href = "/posts" class ="btn btn-primary"> Go Back </a>
 
@@ -26,16 +25,42 @@
         <div class = "card">
             <div class = "card-black">
              
-            <form method = "POST" action="/posts/{{$post->id}}/comments">
-                    {{csrf_field()}}
-                    <div class = "form-group">
-                        <textarea name = "body" placeholder="Leave a comment.." class = "form-control"></textarea>
-                            </div>
-                            <div class = "form-group">
-                                <button   type = "submit" class= "btn btn-primary"> Add Comment </button>                                   
-                            </div>
-                </form>
-            
+                <form method = "POST" action="/posts/{{$post->id}}/comments">
+                        {{csrf_field()}}
+                        <div class = "form-group">
+                            <textarea name = "body" placeholder="Leave a comment.." class = "form-control"></textarea>
+                        </div>
+                                <div class = "form-group">
+                                    <button   type = "submit" class= "btn btn-primary"> Add Comment </button>                                   
+                                
+                                </div>
+                    </form>
+
+
+                    
+                <hr>
+                <div class = "comments">
+                    <ul class = "list-group"> 
+                      
+                         @foreach ($post->comments as $comment)
+    
+                            <li class = "list-group-item">
+                                <small>
+                                {{$comment->created_at}} by {{$post->user->name}}
+                                </small>
+                                {{$comment->body}}
+    
+                            </li>
+                        @endforeach
+                       
+                    </ul>
+                </div>
             </div>
-        </small>
+        </div>
+    </div>
+            
+          
+           
+      
+        
 @endsection

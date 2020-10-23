@@ -97,10 +97,13 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function show($id)
+    public function show($id)
     {
+       
         $post = Post::find($id);
+        
         return view('posts.show')->with('post', $post);
+        dd($post->comments);
     }
 
     /**

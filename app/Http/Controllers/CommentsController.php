@@ -14,9 +14,8 @@ class CommentsController extends Controller
         comments::create([
         'body' => request('body'),
             'post_id' => $post->id
-        ]);
-
-
+        ]);      
         return redirect('/posts')->with('success','Comment added');
     }
+  
 }
